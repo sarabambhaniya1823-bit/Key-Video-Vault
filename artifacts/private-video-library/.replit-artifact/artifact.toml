@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Private Video Library"
+description = "A phone-friendly private video library with viewer access keys, a separate admin key for uploading multiple videos, and a name-and-age prompt for viewers."
+version = "1.0.0"
+id = "artifacts/private-video-library"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24852
+
+[services.development]
+run = "pnpm --filter @workspace/private-video-library run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/private-video-library", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/private-video-library/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24852"
+BASE_PATH = "/"
