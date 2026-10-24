@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: access
+    description: Viewer and administrator access-key verification
 paths:
   /healthz:
     get:
@@ -24,6 +26,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /access/verify:
+    post:
+      operationId: verifyAccessKey
+      tags: [access]
+      summary: Verify the viewer or administrator key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessKeyInput"
+      responses:
+        "200":
+          description: Access key accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessSession"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "401":
+          description: Access key rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +65,27 @@ components:
           type: string
       required:
         - status
+    AccessKeyInput:
+      type: object
+      properties:
+        key:
+          type: string
+          minLength: 1
+      required:
+        - key
+    AccessSession:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [admin, viewer]
+      required:
+        - role
+    ErrorEnvelope:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
 

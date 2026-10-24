@@ -1,0 +1,1 @@
+- [Little Reel storage scope](little-reel-storage-scope.md) — the user chose device-local video storage without account sign-in or cross-device syncing.
